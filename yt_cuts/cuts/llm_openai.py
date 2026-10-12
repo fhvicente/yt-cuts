@@ -12,7 +12,7 @@ _TOOL = {
     "type": "function",
     "function": {
         "name": "emit_segments",
-        "description": "Devolve os segmentos de corte escolhidos.",
+        "description": "Returns the chosen cut segments.",
         "parameters": {
             "type": "object",
             "properties": {

@@ -14,4 +14,4 @@ class ASRProvider(Protocol):
 def get_asr(name: str, settings) -> ASRProvider:
     if name == "deepgram":
         return DeepgramASR(settings.deepgram_api_key)
-    raise ValueError(f"ASR desconhecido: {name!r}")
+    raise ValueError(f"unknown ASR: {name!r}")

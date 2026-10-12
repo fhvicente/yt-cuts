@@ -13,7 +13,7 @@ def run(args: list[str], *, check: bool = True) -> subprocess.CompletedProcess:
     cmd = ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", *args]
     proc = subprocess.run(cmd, capture_output=True, text=True)
     if check and proc.returncode != 0:
-        raise FFmpegError(proc.stderr.strip() or f"ffmpeg falhou: {' '.join(cmd)}")
+        raise FFmpegError(proc.stderr.strip() or f"ffmpeg failed: {' '.join(cmd)}")
     return proc
 
 

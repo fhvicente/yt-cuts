@@ -26,3 +26,5 @@ clips/
 
 # OS
 .DS_Store
+
+/docs

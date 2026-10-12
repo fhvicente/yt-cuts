@@ -2,12 +2,12 @@ from __future__ import annotations
 
 import anthropic
 
-from yt_cuts.cuts.postprocess import finalize
-from yt_cuts.models import Segment, Transcript
+from yt_cuts.cuts.postprocess import ends_sentence, finalize
+from yt_cuts.models import Segment, Transcript, Word
 
 _TOOL = {
     "name": "emit_segments",
-    "description": "Devolve os segmentos de corte escolhidos.",
+    "description": "Returns the chosen cut segments.",
     "input_schema": {
         "type": "object",
         "properties": {
@@ -31,14 +31,31 @@ _TOOL = {
 }
 
 
+def timed_lines(words: list[Word], max_words: int = 40) -> str:
+    """One line per sentence: `[start-end] text`, so the LLM sees real timestamps."""
+    lines, cur = [], []
+    for w in words:
+        cur.append(w)
+        if ends_sentence(w) or len(cur) >= max_words:
+            lines.append(cur)
+            cur = []
+    if cur:
+        lines.append(cur)
+    return "\n".join(
+        f"[{ln[0].start:.2f}-{ln[-1].end:.2f}] " + " ".join(w.text for w in ln) for ln in lines
+    )
+
+
 def build_prompt(transcript: Transcript, n: int, min_dur: float, max_dur: float) -> str:
     return (
-        f"És um editor de vídeo. A partir da transcrição abaixo, escolhe os {n} "
-        f"melhores segmentos para clips curtos virais.\n"
-        f"Regras: cada segmento entre {min_dur:.0f} e {max_dur:.0f} segundos; "
-        f"começa e termina em fronteira de frase; prioriza ganchos fortes.\n"
-        f"Usa a ferramenta emit_segments com start/end em segundos.\n\n"
-        f"Transcrição:\n{transcript.text}"
+        f"You are a video editor. From the transcript below, pick the {n} "
+        f"best segments for short viral clips.\n"
+        f"Rules: each segment between {min_dur:.0f} and {max_dur:.0f} seconds; "
+        f"starts and ends on a sentence boundary; prioritise strong hooks.\n"
+        f"Each line is `[start-end] sentence` in seconds. Use those timestamps: "
+        f"a segment's start is a line's start, its end is a line's end.\n"
+        f"Use the emit_segments tool with start/end in seconds.\n\n"
+        f"Transcript:\n{timed_lines(transcript.words)}"
     )
 
 

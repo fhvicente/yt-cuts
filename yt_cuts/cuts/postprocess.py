@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from yt_cuts.models import Segment, Word
 
+SENTENCE_END = (".", "?", "!", "…")
+
 
 def snap_to_words(seg: Segment, words: list[Word]) -> Segment:
     if not words:
@@ -19,11 +21,21 @@ def snap_to_words(seg: Segment, words: list[Word]) -> Segment:
     return Segment(start, end, seg.title, seg.hook, seg.score)
 
 
-def clamp_duration(seg: Segment, min_dur: float, max_dur: float) -> Segment | None:
+def ends_sentence(w: Word) -> bool:
+    return w.text.rstrip().endswith(SENTENCE_END)
+
+
+def clamp_duration(
+    seg: Segment, min_dur: float, max_dur: float, words: list[Word] = ()
+) -> Segment | None:
     if seg.duration < min_dur:
         return None
     if seg.duration > max_dur:
-        return Segment(seg.start, seg.start + max_dur, seg.title, seg.hook, seg.score)
+        # cut at the last sentence end that fits; hard cut only if none does
+        lo, hi = seg.start + min_dur, seg.start + max_dur
+        ends = [w.end for w in words if lo <= w.end <= hi and ends_sentence(w)]
+        end = max(ends) if ends else hi
+        return Segment(seg.start, end, seg.title, seg.hook, seg.score)
     return seg
 
 
@@ -41,7 +53,7 @@ def finalize(
     raw: list[Segment], words: list[Word], n: int, min_dur: float, max_dur: float
 ) -> list[Segment]:
     snapped = [snap_to_words(s, words) for s in raw]
-    clamped = [c for c in (clamp_duration(s, min_dur, max_dur) for s in snapped) if c]
+    clamped = [c for c in (clamp_duration(s, min_dur, max_dur, words) for s in snapped) if c]
     deduped = dedupe_overlaps(clamped)
     deduped.sort(key=lambda s: -(s.score or 0.0))
     return deduped[:n]

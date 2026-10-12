@@ -25,7 +25,7 @@ _jobs: dict[str, dict[str, Any]] = {}
 
 
 def _run_job(
-    job_id: str, url: str, clips: int, idioma: str,
+    job_id: str, url: str, clips: int, language: str,
     min_dur: float, max_dur: float, llm: str, style: str,
 ) -> None:
     _jobs[job_id]["status"] = "running"
@@ -33,7 +33,7 @@ def _run_job(
         out_dir = OUTPUT_DIR / job_id
         settings = Settings.from_env(
             clips=clips,
-            idioma=idioma,
+            language=language,
             min_dur=min_dur,
             max_dur=max_dur,
             llm=llm,
@@ -61,7 +61,7 @@ async def index() -> HTMLResponse:
 async def create_job(
     url: str = Form(...),
     clips: int = Form(10),
-    idioma: str = Form("pt"),
+    language: str = Form("pt"),
     min_dur: float = Form(20.0),
     max_dur: float = Form(60.0),
     llm: str = Form("claude"),
@@ -71,7 +71,7 @@ async def create_job(
     _jobs[job_id] = {"status": "pending", "results": [], "error": None}
     loop = asyncio.get_event_loop()
     loop.run_in_executor(
-        _executor, _run_job, job_id, url, clips, idioma, min_dur, max_dur, llm, style
+        _executor, _run_job, job_id, url, clips, language, min_dur, max_dur, llm, style
     )
     return {"job_id": job_id}
 
@@ -80,7 +80,7 @@ async def create_job(
 async def get_job(job_id: str) -> dict:
     job = _jobs.get(job_id)
     if not job:
-        raise HTTPException(status_code=404, detail="job não encontrado")
+        raise HTTPException(status_code=404, detail="job not found")
     return job
 
 
@@ -88,5 +88,5 @@ async def get_job(job_id: str) -> dict:
 async def get_clip(job_id: str, filename: str) -> FileResponse:
     path = OUTPUT_DIR / job_id / filename
     if not path.exists() or not path.is_file():
-        raise HTTPException(status_code=404, detail="clip não encontrado")
+        raise HTTPException(status_code=404, detail="clip not found")
     return FileResponse(path, media_type="video/mp4", filename=filename)

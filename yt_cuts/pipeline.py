@@ -36,7 +36,7 @@ def run(url: str, settings: Settings) -> list[ClipResult]:
     if cache.has("transcript.json"):
         transcript = cache.load_transcript()
     else:
-        transcript = asr.transcribe(audio, settings.idioma)
+        transcript = asr.transcribe(audio, settings.language)
         cache.save_transcript(transcript)
 
     segments = selector.select(transcript, settings.clips, settings.min_dur, settings.max_dur)

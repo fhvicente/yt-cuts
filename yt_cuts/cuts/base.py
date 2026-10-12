@@ -18,4 +18,4 @@ def get_selector(name: str, settings) -> CutSelector:
         return ClaudeCutSelector(settings.anthropic_api_key, settings.claude_model)
     if name == "openai":
         return OpenAICutSelector(settings.openai_api_key, settings.openai_model)
-    raise ValueError(f"selector desconhecido: {name!r}")
+    raise ValueError(f"unknown selector: {name!r}")

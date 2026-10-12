@@ -27,7 +27,7 @@ def test_main_builds_settings_and_runs(monkeypatch, tmp_path):
 
     monkeypatch.setattr(cli.pipeline, "run", fake_run)
     rc = cli.main([
-        "https://yt/x", "--clips", "3", "--idioma", "pt",
+        "https://yt/x", "--clips", "3", "--language", "pt",
         "--out", str(tmp_path / "o"), "--no-cache", "--min-dur", "15",
     ])
     assert rc == 0

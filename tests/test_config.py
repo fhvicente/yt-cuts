@@ -14,7 +14,7 @@ def test_from_env_reads_keys(monkeypatch):
 def test_defaults():
     s = Settings.from_env()
     assert s.clips == 10
-    assert s.idioma == "pt"
+    assert s.language == "pt"
     assert s.min_dur == 20.0
     assert s.max_dur == 60.0
     assert s.out == Path("./output")

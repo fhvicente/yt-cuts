@@ -27,3 +27,10 @@ def test_parse_tool_input_tolerates_missing_optional_fields():
     segs = parse_tool_input({"segments": [{"start": 1.0, "end": 2.0}]})
     assert segs[0].title is None
     assert segs[0].score is None
+
+
+def test_build_prompt_has_timestamped_sentences():
+    t = Transcript([Word("Olá.", 1.0, 1.4), Word("Tudo", 2.0, 2.3), Word("bem?", 2.3, 2.8)], "pt", 3.0)
+    p = build_prompt(t, n=3, min_dur=20.0, max_dur=60.0)
+    assert "[1.00-1.40] Olá." in p
+    assert "[2.00-2.80] Tudo bem?" in p

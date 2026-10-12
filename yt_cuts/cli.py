@@ -5,15 +5,15 @@ from pathlib import Path
 
 from yt_cuts import pipeline
 from yt_cuts.config import Settings
-from yt_cuts.subtitles.styles import DEFAULT_STYLE, PRESETS
+from yt_cuts.subtitles.styles import ALIASES, DEFAULT_STYLE, PRESETS
 
 
 def main(argv: list[str] | None = None) -> int:
-    p = argparse.ArgumentParser(prog="cortar.py", description="Gera cortes verticais legendados.")
+    p = argparse.ArgumentParser(prog="cut.py", description="Generates subtitled vertical cuts.")
     p.add_argument("url")
     p.add_argument("--clips", type=int, default=10)
-    p.add_argument("--idioma", default="pt")
-    p.add_argument("--style", default=DEFAULT_STYLE, choices=list(PRESETS))
+    p.add_argument("--language", default="pt")
+    p.add_argument("--style", default=DEFAULT_STYLE, choices=[*PRESETS, *ALIASES])
     p.add_argument("--out", type=Path, default=Path("./output"))
     p.add_argument("--asr", default="deepgram")
     p.add_argument("--llm", default="claude")
@@ -24,7 +24,7 @@ def main(argv: list[str] | None = None) -> int:
     a = p.parse_args(argv)
 
     settings = Settings.from_env(
-        clips=a.clips, idioma=a.idioma, style=a.style, out=a.out,
+        clips=a.clips, language=a.language, style=a.style, out=a.out,
         asr=a.asr, llm=a.llm, reframe=a.reframe, use_cache=not a.no_cache,
         min_dur=a.min_dur, max_dur=a.max_dur,
     )

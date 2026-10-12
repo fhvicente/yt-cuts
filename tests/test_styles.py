@@ -7,10 +7,10 @@ def test_phrase_pop_highlight_defaults():
     assert s.animation == "pop_highlight"
     assert s.max_words == 3
     assert s.min_words == 2
-    assert s.alignment == 2             # bottom-center mantido
-    assert s.wrap_style == 0            # wrap seguro nas margens 9:16
-    assert s.primary == "&H0000FFFF"    # amarelo = palavra ativa
-    assert s.secondary == "&H00FFFFFF"  # branco = inativa
+    assert s.alignment == 2             # bottom-center kept
+    assert s.wrap_style == 0            # safe wrap within 9:16 margins
+    assert s.primary == "&H0000FFFF"    # yellow = active word
+    assert s.secondary == "&H00FFFFFF"  # white = inactive
 
 
 def test_phrase_pop_has_no_word_highlight():
@@ -28,4 +28,8 @@ def test_unknown_style_raises():
         style_for("nope")
     except ValueError:
         return
-    raise AssertionError("esperava ValueError")
+    raise AssertionError("expected ValueError")
+
+
+def test_karaoke_alias():
+    assert style_for("karaoke").animation == "pop_highlight"

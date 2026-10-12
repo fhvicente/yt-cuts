@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>yt-cuts</title>
+  <title>YT-Cuts</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -187,13 +187,13 @@
 <body>
   <div class="container">
     <header>
-      <h1>yt-cuts</h1>
-      <p>Gera clips verticais 9:16 com legendas dinâmicas a partir de um vídeo do YouTube.</p>
+      <h1>YT-Cuts</h1>
+      <p>Generates vertical 9:16 clips with dynamic subtitles from a YouTube video.</p>
     </header>
 
     <form id="form" class="card" autocomplete="off">
       <div class="field">
-        <label>URL do YouTube</label>
+        <label>YouTube URL</label>
         <input type="url" name="url" id="url" placeholder="https://www.youtube.com/watch?v=..." required />
       </div>
       <div class="row">
@@ -202,11 +202,11 @@
           <input type="number" name="clips" id="clips" value="10" min="1" max="30" />
         </div>
         <div class="field">
-          <label>Idioma</label>
-          <input type="text" name="idioma" id="idioma" value="pt" maxlength="5" />
+          <label>Language</label>
+          <input type="text" name="language" id="language" value="pt" maxlength="5" />
         </div>
         <div class="field">
-          <label>Duração</label>
+          <label>Duration</label>
           <select name="dur" id="dur">
             <option value="20-45">20–45s</option>
             <option value="30-60" selected>30–60s</option>
@@ -215,21 +215,21 @@
         </div>
       </div>
       <div class="field">
-        <label>LLM para seleção de cortes</label>
+        <label>LLM for cut selection</label>
         <select name="llm" id="llm">
           <option value="claude" selected>Claude (Anthropic)</option>
           <option value="openai">GPT-4o-mini (OpenAI)</option>
         </select>
       </div>
       <div class="field">
-        <label>Estilo de legenda</label>
+        <label>Subtitle style</label>
         <select name="style" id="style">
-          <option value="phrase-pop-highlight" selected>Frase + palavra ativa</option>
-          <option value="phrase-pop">Frase simples</option>
-          <option value="word-bounce">Palavra a saltar</option>
+          <option value="phrase-pop-highlight" selected>Phrase + active word</option>
+          <option value="phrase-pop">Simple phrase</option>
+          <option value="word-bounce">Bouncing word</option>
         </select>
       </div>
-      <button type="submit" id="submit-btn">Gerar clips</button>
+      <button type="submit" id="submit-btn">Generate clips</button>
     </form>
 
     <div id="status"></div>
@@ -251,7 +251,7 @@
       const body = new FormData();
       body.append('url', document.getElementById('url').value.trim());
       body.append('clips', document.getElementById('clips').value);
-      body.append('idioma', document.getElementById('idioma').value.trim());
+      body.append('language', document.getElementById('language').value.trim());
       body.append('min_dur', minDur);
       body.append('max_dur', maxDur);
       body.append('llm', document.getElementById('llm').value);
@@ -259,19 +259,19 @@
 
       submitBtn.disabled = true;
       resultsEl.style.display = 'none';
-      showRunning('A iniciar…');
+      showRunning('Starting…');
 
       let res;
       try {
         res = await fetch('/jobs', { method: 'POST', body });
       } catch (err) {
-        showError('Erro ao contactar o servidor: ' + err.message);
+        showError('Could not reach the server: ' + err.message);
         submitBtn.disabled = false;
         return;
       }
 
       if (!res.ok) {
-        showError('Erro do servidor: ' + res.status);
+        showError('Server error: ' + res.status);
         submitBtn.disabled = false;
         return;
       }
@@ -288,7 +288,7 @@
       } catch { return; }
 
       if (data.status === 'running') {
-        showRunning('A processar… (pode demorar 1–5 min)');
+        showRunning('Processing… (may take 1–5 min)');
       } else if (data.status === 'done') {
         clearInterval(pollTimer);
         submitBtn.disabled = false;
@@ -297,7 +297,7 @@
       } else if (data.status === 'error') {
         clearInterval(pollTimer);
         submitBtn.disabled = false;
-        showError(data.error || 'Erro desconhecido.');
+        showError(data.error || 'Unknown error.');
       }
     }
 
@@ -314,12 +314,12 @@
     function showResults(clips) {
       if (!clips || clips.length === 0) {
         statusEl.style.display = 'block';
-        statusEl.innerHTML = `<div class="status-error">Nenhum clip gerado. Verifica a URL ou ajusta a duração.</div>`;
+        statusEl.innerHTML = `<div class="status-error">No clips generated. Check the URL or adjust the duration.</div>`;
         return;
       }
       resultsEl.style.display = 'block';
       resultsEl.innerHTML = `
-        <h2>${clips.length} clip${clips.length !== 1 ? 's' : ''} gerado${clips.length !== 1 ? 's' : ''}</h2>
+        <h2>${clips.length} clip${clips.length !== 1 ? 's' : ''} generated</h2>
         <ul class="clip-list">
           ${clips.map(c => `
             <li class="clip-item">
@@ -328,7 +328,7 @@
             </li>
           `).join('')}
         </ul>
-        <button class="new-btn" onclick="resetForm()">← Novo vídeo</button>
+        <button class="new-btn" onclick="resetForm()">← New video</button>
       `;
     }
 

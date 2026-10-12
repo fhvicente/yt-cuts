@@ -11,7 +11,7 @@ def test_run_job_forwards_style_to_settings(monkeypatch, tmp_path):
     jid = "job1"
     server._jobs[jid] = {"status": "pending", "results": [], "error": None}
     server._run_job(
-        jid, "https://yt/x", clips=2, idioma="pt",
+        jid, "https://yt/x", clips=2, language="pt",
         min_dur=20.0, max_dur=60.0, llm="claude", style="word-bounce",
     )
 

@@ -15,7 +15,7 @@ class Settings:
     anthropic_api_key: str = ""
     openai_api_key: str = ""
     clips: int = 10
-    idioma: str = "pt"
+    language: str = "pt"
     style: str = "phrase-pop-highlight"
     out: Path = field(default_factory=lambda: Path("./output"))
     min_dur: float = 20.0

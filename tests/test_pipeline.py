@@ -15,7 +15,7 @@ class _MockSelector:
 
 
 def test_pipeline_produces_clips(monkeypatch, sample_video, tmp_path):
-    # download devolve o vídeo de amostra; ASR/LLM mockados; reframe/ass/render reais
+    # download returns the sample video; ASR/LLM mocked; reframe/ass/render real
     monkeypatch.setattr(pl, "probe_video", lambda url: ("vidX", {"id": "vidX"}))
     monkeypatch.setattr(pl, "download", lambda url, dest, vid: sample_video)
     monkeypatch.setattr(pl, "extract_audio", lambda v, o: o)

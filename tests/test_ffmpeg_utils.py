@@ -9,4 +9,4 @@ def test_probe_dimensions_on_sample(sample_video):
 
 def test_run_raises_on_bad_args():
     with pytest.raises(FFmpegError):
-        run(["-i", "/nao/existe/ficheiro.mp4", "/tmp/out_zzz.mp4"])
+        run(["-i", "/does/not/exist/file.mp4", "/tmp/out_zzz.mp4"])

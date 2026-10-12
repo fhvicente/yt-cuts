@@ -13,4 +13,4 @@ class Reframer(Protocol):
 def get_reframer(name: str) -> Reframer:
     if name == "static":
         return StaticCenterReframer()
-    raise ValueError(f"reframer desconhecido: {name!r}")
+    raise ValueError(f"unknown reframer: {name!r}")

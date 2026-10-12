@@ -3,9 +3,9 @@ from __future__ import annotations
 from yt_cuts.models import Segment, Word
 from yt_cuts.subtitles.styles import DEFAULT_STYLE, Style, style_for
 
-MAX_GAP = 0.8  # segundos: gap maior quebra frase
+MAX_GAP = 0.8  # seconds: a longer gap breaks the phrase
 
-# pop/bounce à entrada (~140ms): 70% -> overshoot 112% -> assenta em 100%
+# entry pop/bounce (~140ms): 70% -> overshoot 112% -> settles at 100%
 POP = "{\\fscx70\\fscy70\\t(0,70,\\fscx112\\fscy112)\\t(70,140,\\fscx100\\fscy100)}"
 
 
@@ -57,11 +57,11 @@ def _merge_orphans(chunks: list[list[Word]], min_words: int) -> list[list[Word]]
     out: list[list[Word]] = []
     for c in chunks:
         if out and len(c) < min_words:
-            out[-1].extend(c)          # órfão funde-se no chunk anterior
+            out[-1].extend(c)          # orphan merges into the previous chunk
         else:
             out.append(c)
     if len(out) > 1 and len(out[0]) < min_words:
-        out[1][:0] = out[0]            # órfão inicial funde-se no seguinte
+        out[1][:0] = out[0]            # leading orphan merges into the next one
         out.pop(0)
     return out
 
