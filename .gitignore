@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Virtualenv
+.venv/
+venv/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Pipeline artifacts / cache (pay-per-use ASR — do NOT commit)
+.cache/
+output/
+clips/
+*.mp4
+*.wav
+*.mp3
+*.ass
+
+# OS
+.DS_Store

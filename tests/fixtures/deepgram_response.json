@@ -1,0 +1,14 @@
+{
+  "metadata": {"duration": 2.0},
+  "results": {
+    "channels": [
+      {"alternatives": [
+        {"transcript": "olá mundo",
+         "words": [
+           {"word": "olá", "start": 0.1, "end": 0.4, "confidence": 0.99, "speaker": 0},
+           {"word": "mundo", "start": 0.4, "end": 0.9, "confidence": 0.98, "speaker": 0}
+         ]}
+      ]}
+    ]
+  }
+}
