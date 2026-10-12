@@ -188,7 +188,7 @@
   <div class="container">
     <header>
       <h1>yt-cuts</h1>
-      <p>Gera clips verticais 9:16 com legendas karaoke a partir de um vídeo do YouTube.</p>
+      <p>Gera clips verticais 9:16 com legendas dinâmicas a partir de um vídeo do YouTube.</p>
     </header>
 
     <form id="form" class="card" autocomplete="off">
@@ -221,6 +221,14 @@
           <option value="openai">GPT-4o-mini (OpenAI)</option>
         </select>
       </div>
+      <div class="field">
+        <label>Estilo de legenda</label>
+        <select name="style" id="style">
+          <option value="phrase-pop-highlight" selected>Frase + palavra ativa</option>
+          <option value="phrase-pop">Frase simples</option>
+          <option value="word-bounce">Palavra a saltar</option>
+        </select>
+      </div>
       <button type="submit" id="submit-btn">Gerar clips</button>
     </form>
 
@@ -247,6 +255,7 @@
       body.append('min_dur', minDur);
       body.append('max_dur', maxDur);
       body.append('llm', document.getElementById('llm').value);
+      body.append('style', document.getElementById('style').value);
 
       submitBtn.disabled = true;
       resultsEl.style.display = 'none';

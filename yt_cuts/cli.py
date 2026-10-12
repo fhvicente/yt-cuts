@@ -5,6 +5,7 @@ from pathlib import Path
 
 from yt_cuts import pipeline
 from yt_cuts.config import Settings
+from yt_cuts.subtitles.styles import DEFAULT_STYLE, PRESETS
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -12,7 +13,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("url")
     p.add_argument("--clips", type=int, default=10)
     p.add_argument("--idioma", default="pt")
-    p.add_argument("--style", default="karaoke")
+    p.add_argument("--style", default=DEFAULT_STYLE, choices=list(PRESETS))
     p.add_argument("--out", type=Path, default=Path("./output"))
     p.add_argument("--asr", default="deepgram")
     p.add_argument("--llm", default="claude")

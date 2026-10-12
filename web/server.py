@@ -12,6 +12,7 @@ from fastapi.staticfiles import StaticFiles
 
 from yt_cuts.config import Settings
 from yt_cuts import pipeline
+from yt_cuts.subtitles.styles import DEFAULT_STYLE
 
 OUTPUT_DIR = Path("./output")
 HTML_FILE = Path(__file__).parent / "index.html"
@@ -25,7 +26,7 @@ _jobs: dict[str, dict[str, Any]] = {}
 
 def _run_job(
     job_id: str, url: str, clips: int, idioma: str,
-    min_dur: float, max_dur: float, llm: str,
+    min_dur: float, max_dur: float, llm: str, style: str,
 ) -> None:
     _jobs[job_id]["status"] = "running"
     try:
@@ -36,6 +37,7 @@ def _run_job(
             min_dur=min_dur,
             max_dur=max_dur,
             llm=llm,
+            style=style,
             out=out_dir,
             cache_dir=Path("./.cache"),
         )
@@ -63,11 +65,14 @@ async def create_job(
     min_dur: float = Form(20.0),
     max_dur: float = Form(60.0),
     llm: str = Form("claude"),
+    style: str = Form(DEFAULT_STYLE),
 ) -> dict:
     job_id = uuid.uuid4().hex
     _jobs[job_id] = {"status": "pending", "results": [], "error": None}
     loop = asyncio.get_event_loop()
-    loop.run_in_executor(_executor, _run_job, job_id, url, clips, idioma, min_dur, max_dur, llm)
+    loop.run_in_executor(
+        _executor, _run_job, job_id, url, clips, idioma, min_dur, max_dur, llm, style
+    )
     return {"job_id": job_id}
 
 

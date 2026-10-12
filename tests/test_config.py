@@ -24,3 +24,8 @@ def test_overrides_apply():
     s = Settings.from_env(clips=3, use_cache=False)
     assert s.clips == 3
     assert s.use_cache is False
+
+
+def test_default_style_is_tiktok_preset():
+    s = Settings.from_env()
+    assert s.style == "phrase-pop-highlight"

@@ -16,7 +16,7 @@ class Settings:
     openai_api_key: str = ""
     clips: int = 10
     idioma: str = "pt"
-    style: str = "karaoke"
+    style: str = "phrase-pop-highlight"
     out: Path = field(default_factory=lambda: Path("./output"))
     min_dur: float = 20.0
     max_dur: float = 60.0
